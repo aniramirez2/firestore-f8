@@ -1,7 +1,7 @@
 
-import { addDoc, collection, getDocs } from "firebase/firestore"
+import { addDoc, collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { firestore } from "../../firebase/firebaseConfig"
-import { agregarProducto, setProductos } from "./slice"
+import { agregarProducto, setError, setProductos, updateProduct } from "./slice"
 
 export const addProduct = (producto) => {
     return async (dispatch) => {
@@ -32,4 +32,18 @@ export const getAllProducts = () => {
         dispatch(setError({ error: true, code: error.code, message: error.message })) 
     }
    } 
+}
+
+export const updateProductFirestore = (id, producto) => {
+    return async (dispatch) => {
+        try {
+            const docRef = doc(firestore, 'productos', id)
+            await updateDoc(docRef, producto)
+
+            dispatch(updateProduct({id, ...producto}))
+            console.log("update product", {id, ...producto})
+        } catch (error) {
+            dispatch(setError({ error: true, code: error.code, message: error.message })) 
+        }
+    }
 }
