@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { googleLogin } from "./redux/users/middleware"
-import { addProduct, getAllProducts, updateProductFirestore } from "./redux/productos/middleware"
+import { addProduct, getAllProducts, updateProductFirestore, eliminarProducto } from "./redux/productos/middleware"
 import { useEffect, useState } from "react"
 
 function App() {
@@ -40,6 +40,10 @@ function App() {
     setNombre('')
     setPrecio('')
   }
+
+  const handleDelete = (id) => {
+    dispatch(eliminarProducto(id))
+  }
   return (
     <>
       <div className="container">
@@ -60,11 +64,12 @@ function App() {
           </div>
           <button type="submit">Crear</button>
           <button type="button" onClick={()=>sendDispatchUpdate()}>Actualizar</button>
+          
         </form>
         <div>
           {productos?.map((element) => (
             <div key={element.id} className="flex w-full">
-              <h5>{element.nombre} - {element.precio} - <button type="button" onClick={()=> handleUpdate(element.id, element)}>Actualizar</button> - <button type="button">Eliminar</button> </h5>
+              <h5>{element.nombre} - {element.precio} - <button type="button" onClick={()=> handleUpdate(element.id, element)}>Actualizar</button> - <button type="button" onClick={()=> {handleDelete(element.id)}}>Eliminar</button> </h5>
             </div>
           ))}
         </div>

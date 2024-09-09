@@ -1,7 +1,7 @@
 
-import { addDoc, collection, getDocs, doc, updateDoc } from "firebase/firestore"
+import { addDoc, collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore"
 import { firestore } from "../../firebase/firebaseConfig"
-import { agregarProducto, setError, setProductos, updateProduct } from "./slice"
+import { agregarProducto, setError, setProductos, updateProduct, deleteProduct } from "./slice"
 
 export const addProduct = (producto) => {
     return async (dispatch) => {
@@ -42,6 +42,19 @@ export const updateProductFirestore = (id, producto) => {
 
             dispatch(updateProduct({id, ...producto}))
             console.log("update product", {id, ...producto})
+        } catch (error) {
+            dispatch(setError({ error: true, code: error.code, message: error.message })) 
+        }
+    }
+}
+
+export const eliminarProducto = (id) => {
+    return async (dispatch) => {
+        try {
+            console.log("id del producto", id)
+            const response = await deleteDoc(doc(firestore, "productos", id));
+            console.log("response", response)
+            dispatch(deleteProduct(id))
         } catch (error) {
             dispatch(setError({ error: true, code: error.code, message: error.message })) 
         }
